@@ -4,7 +4,7 @@ from get_paying_hours import paying_hours
 from collections import defaultdict
 
 def write_message(Type, Target, From, To, WorkingDay, WorkingHour):
-	# Get PCT data from 112 DB
+	# Get PCT data in 12 hours from 112 DB
 	conn = pymssql.connect("16.187.224.112", "sa", "support", "FE2CheckPoint")
 	cursor = conn.cursor(as_dict=True)
 	cursor.execute("""
