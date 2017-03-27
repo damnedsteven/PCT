@@ -67,10 +67,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour):
 	Sum = 0
 	Sum_Fail = 0
 	for k, v in PCT.items():
-		Count[Platform[v['SKU']]]['Total'] += 1
+		Count[Platform[v['SKU']] if Platform[v['SKU']] != 'N/A' else v['SKU']]['Total'] += 1
 		Sum += 1
 		if (paying_hours(v[From], v[To], WorkingDay, WorkingHour) > Target):
-			Count[Platform[v['SKU']]]['Fail'] += 1
+			Count[Platform[v['SKU']] if Platform[v['SKU']] != 'N/A' else v['SKU']]['Fail'] += 1
 			Sum_Fail += 1
 	
 	# Do sorting
