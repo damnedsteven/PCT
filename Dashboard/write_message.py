@@ -12,6 +12,13 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 		SO,
 		PLO,
 		Product,
+		CASE
+			WHEN ProductFamily.ConfigType IN ('CTO', 'BTO&CTO') THEN 'CTO' 
+			WHEN ProductFamily.ConfigType IN ('PPS Option', 'PPS Option 3F') THEN 'PPS Option'
+			WHEN FEFlag = 1 THEN 'Complex CTO'
+			WHEN ProductFamily.ConfigType IN ('ConfigRack') THEN 'Rack'
+			ELSE 'Others' 
+		END as ProdCat,
 		{From},
 		{To},
 		FEFlag,
@@ -22,7 +29,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 		ProductFamily
 		ON PCTMaster.Family=ProductFamily.ProductFamily AND (PCTMaster.ConfigType=ProductFamily.ConfigType OR PCTMaster.ConfigType is NULL)
 	WHERE
-		ProductFamily.ConfigType NOT IN ('PPS Option', 'PPS Option 3F')
+		{From} is NOT NULL
 		AND
 		{To} >= DATEADD(hh, -12, DATEADD(hh,DATEDIFF(hh,'19000101',GETDATE()),'19000101')) 
 		AND
@@ -35,8 +42,9 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 	PCT = {}
 	SKU = []
 	for row in cursor:
-		PCT.update({row['PLO']:{'SKU':row['Product'].split(' ')[0], From:row[From], To:row[To]}})
-		SKU.append(row['Product'].split(' ')[0])	
+		PCT.update({row['PLO']:{'ProdCat':row['ProdCat'], 'SKU':row['Product'].split(' ')[0], From:row[From], To:row[To]}})
+		if (row['ProdCat'] != 'PPS Option'):
+			SKU.append(row['Product'].split(' ')[0])	
 
 	SKUs = "'" + "','".join(SKU) + "'"
 
@@ -60,7 +68,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 		Platform[row['SKU']] = row['Name']
 
 	conn.close()
-
+	
 	# Calculate fail rate
 	# Count_Total = defaultdict(lambda: 0)
 	Count = defaultdict(lambda: defaultdict(lambda: 0))
@@ -68,11 +76,13 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 	Sum = 0
 	Sum_Fail = 0
 	for k, v in PCT.items():
-		Count[Platform[v['SKU']] if Platform[v['SKU']] != 'N/A' else v['SKU']]['Total'] += 1
+		Item = (Platform[v['SKU']] if Platform[v['SKU']] != 'N/A' else v['SKU']) if Type != 'PC' else v['ProdCat']
+		Count[Item]['Total'] += 1
 		Sum += 1
-		if (paying_hours(v[From], v[To], WorkingDay, WorkingHour) > Target):
-			Count[Platform[v['SKU']] if Platform[v['SKU']] != 'N/A' else v['SKU']]['Fail'] += 1
-			FailedPLO[Platform[v['SKU']] if Platform[v['SKU']] != 'N/A' else v['SKU']].append(k)
+		Goal = Target if Type != 'PC' else Target[v['ProdCat']]
+		if (paying_hours(v[From], v[To], WorkingDay, WorkingHour) > Goal):
+			Count[Item]['Fail'] += 1
+			FailedPLO[Item].append(k)
 			Sum_Fail += 1
 	
 	FailedPLOs = defaultdict(lambda: 'N/A')
@@ -86,7 +96,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 	Sorted_PF = sorted(PF, key=lambda x: (Count[x]['Failure_Rate'], Count[x]['Fail']), reverse=True)
 	
 	# Generate table
-	if (Type == 1):
+	if (Type == 'MR'):
 		html = """
 		<table border="1">
 			<tr bgcolor="#C6EFCE">
@@ -99,7 +109,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 				<th>Failure Rate</th>
 			</tr>
 		"""
-	if (Type == 2):
+	if (Type == 'P'):
 		html = """
 		<table border="1">
 			<tr bgcolor="#FFFF99">
@@ -112,7 +122,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 				<th>Failure Rate</th>
 			</tr>
 		"""
-	if (Type == 3):
+	if (Type == 'PGI'):
 		html = """
 		<table border="1">
 			<tr bgcolor="#E6E6FA">
@@ -122,6 +132,19 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 				<th>Platform</th>
 				<th>PGI PLO QTY</th>
 				<th>PGI TAT Fail PLO QTY (Over 6H)</th>
+				<th>Failure Rate</th>
+			</tr>
+		"""
+	if (Type == 'PC'):
+		html = """
+		<table border="1">
+			<tr bgcolor="#e842f4">
+				<th colspan="4">Overall PCT Performance</th>
+			</tr>
+			<tr bgcolor="#e842f4">
+				<th>Product Category</th>
+				<th>PGI DG QTY</th>
+				<th>PCT Fail DG QTY</th>
 				<th>Failure Rate</th>
 			</tr>
 		"""
