@@ -3,7 +3,7 @@ import pymssql
 from get_paying_hours import paying_hours
 from collections import defaultdict
 
-def write_message(Type, Target, From, To, WorkingDay, WorkingHour):
+def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 	# Get PCT data in 12 hours from 112 DB
 	conn = pymssql.connect("16.187.224.112", "sa", "support", "FE2CheckPoint")
 	cursor = conn.cursor(as_dict=True)
@@ -64,6 +64,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour):
 	# Calculate fail rate
 	# Count_Total = defaultdict(lambda: 0)
 	Count = defaultdict(lambda: defaultdict(lambda: 0))
+	FailedPLO = defaultdict(lambda: [])
 	Sum = 0
 	Sum_Fail = 0
 	for k, v in PCT.items():
@@ -71,11 +72,14 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour):
 		Sum += 1
 		if (paying_hours(v[From], v[To], WorkingDay, WorkingHour) > Target):
 			Count[Platform[v['SKU']] if Platform[v['SKU']] != 'N/A' else v['SKU']]['Fail'] += 1
+			FailedPLO[Platform[v['SKU']] if Platform[v['SKU']] != 'N/A' else v['SKU']].append(k)
 			Sum_Fail += 1
 	
-	# Do sorting
+	FailedPLOs = defaultdict(lambda: 'N/A')
+	# Do sorting and stringlize
 	for k, v in Count.items():
 		v['Failure_Rate'] = v['Fail']/v['Total']
+		FailedPLOs[k] = "'" + "','".join(FailedPLO[k]) + "'"
 		
 	PF = [ k for k in Count.keys() ]
 	
@@ -126,7 +130,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour):
 		html += '<tr>'
 		html += '<td>' + v + '</td>'
 		html += '<td>' + str(Count[v]['Total']) + '</td>'
-		html += '<td>' + str(Count[v]['Fail']) + '</td>'
+		if (Count[v]['Fail'] > 0):	
+			html += '<td bgcolor=\'#FFC7CE\'><a href=' + URL + '?PLO=' + FailedPLOs[v] + '>' + str(Count[v]['Fail']) + '</a></td>'
+		else:
+			html += '<td>' + str(Count[v]['Fail']) + '</td>'
 		html += '<td>' + "{:.0%}".format(Count[v]['Failure_Rate']) + '</td>'
 		html += '</tr>'
 
