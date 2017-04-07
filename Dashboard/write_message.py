@@ -40,34 +40,39 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 		# print('row = %r' % (row,))
 
 	PCT = {}
-	SKU = []
-	for row in cursor:
-		PCT.update({row['PLO']:{'ProdCat':row['ProdCat'], 'SKU':row['Product'].split(' ')[0], From:row[From], To:row[To]}})
-		if (row['ProdCat'] != 'PPS Option'):
-			SKU.append(row['Product'].split(' ')[0])	
+	if (Type != 'PC'):
+		SKU = []
+		for row in cursor:
+			if (row['ProdCat'] != 'PPS Option'):
+				PCT.update({row['PLO']:{'SKU':row['Product'].split(' ')[0], From:row[From], To:row[To]}})
+				SKU.append(row['Product'].split(' ')[0])	
 
-	SKUs = "'" + "','".join(SKU) + "'"
-
+		SKUs = "'" + "','".join(SKU) + "'"
+	else:
+		for row in cursor:
+			PCT.update({row['PLO']:{'ProdCat':row['ProdCat'], From:row[From], To:row[To]}})
+				
 	conn.close()
 
-	# Retrieve SKU and Platform info from 111 DB
-	conn = pymssql.connect("16.187.224.111", "yufei", "yufei123", "PLOdb")
-	cursor = conn.cursor(as_dict=True)
-	cursor.execute("""
-	SELECT
-		SKU,
-		Name
-	FROM
-		SKUList
-	WHERE
-		SKU IN ({SKUs})
-	""".format(SKUs = SKUs))
+	if (Type != 'PC'):
+		# Retrieve SKU and Platform info from 111 DB
+		conn = pymssql.connect("16.187.224.111", "yufei", "yufei123", "PLOdb")
+		cursor = conn.cursor(as_dict=True)
+		cursor.execute("""
+		SELECT
+			SKU,
+			Name
+		FROM
+			SKUList
+		WHERE
+			SKU IN ({SKUs})
+		""".format(SKUs = SKUs))
 
-	Platform = defaultdict(lambda: 'N/A')
-	for row in cursor:
-		Platform[row['SKU']] = row['Name']
+		Platform = defaultdict(lambda: 'N/A')
+		for row in cursor:
+			Platform[row['SKU']] = row['Name']
 
-	conn.close()
+		conn.close()
 	
 	# Calculate fail rate
 	# Count_Total = defaultdict(lambda: 0)
