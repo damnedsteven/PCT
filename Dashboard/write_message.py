@@ -103,7 +103,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 	# Generate table
 	if (Type == 'MR'):
 		html = """
-		<table border="1">
+		<table border="1" width="888">
 			<tr bgcolor="#C6EFCE">
 				<th colspan="4">备料(MR) TAT Performance</th>
 			</tr>
@@ -116,7 +116,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 		"""
 	if (Type == 'P'):
 		html = """
-		<table border="1">
+		<table border="1" width="888">
 			<tr bgcolor="#FFFF99">
 				<th colspan="4">生产(P) TAT Performance</th>
 			</tr>
@@ -129,7 +129,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 		"""
 	if (Type == 'PGI'):
 		html = """
-		<table border="1">
+		<table border="1" width="888">
 			<tr bgcolor="#E6E6FA">
 				<th colspan="4">出货(PGI) TAT Performance</th>
 			</tr>
@@ -142,7 +142,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 		"""
 	if (Type == 'PC'):
 		html = """
-		<table border="1">
+		<table border="1" width="888">
 			<tr bgcolor="#e842f4">
 				<th colspan="4">Overall PCT Performance</th>
 			</tr>

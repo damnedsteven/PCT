@@ -20,8 +20,8 @@ from_date = str(earlier.year) + '/' + str(earlier.month) + '/' + str(earlier.day
 to_date = str(now.year) + '/' + str(now.month) + '/' + str(now.day) + '-' + str(now.hour)
 	
 from_addr = 'PCT@EMCN.COM'
-to_addr = ['yi.li5@hpe.com']
-# to_addr = ['yi.li5@hpe.com', 'yuanfan.shi@hpe.com', 'Steven-zhang.cls@hpe.com', 'gengwu-chen.cls@hpe.com', 'lingcongli.cls@hpe.com', 'wenjie-zhang.cls@hpe.com', 'cls.xuhua-yang@hpe.com', 'egordercheck.cls@hpe.com', 'line-syb.cls@hpe.com', 'qiong-zhang.cls@hpe.com', 'huifen-cao.cls@hpe.com', 'peter-chen.cls@hpe.com', 'emcn.wh@hpe.com', 'minminz@hpe.com', 'jipingz@hpe.com', 'hai-chuan.zhao@hpe.com']
+# to_addr = ['yi.li5@hpe.com']
+to_addr = ['yi.li5@hpe.com', 'yuanfan.shi@hpe.com', 'Steven-zhang.cls@hpe.com', 'gengwu-chen.cls@hpe.com', 'lingcongli.cls@hpe.com', 'wenjie-zhang.cls@hpe.com', 'cls.xuhua-yang@hpe.com', 'egordercheck.cls@hpe.com', 'line-syb.cls@hpe.com', 'qiong-zhang.cls@hpe.com', 'huifen-cao.cls@hpe.com', 'peter-chen.cls@hpe.com', 'emcn.wh@hpe.com', 'minminz@hpe.com', 'jipingz@hpe.com', 'hai-chuan.zhao@hpe.com']
 
 smtp_server = 'smtp3.hpe.com'
 
