@@ -61,7 +61,7 @@ def make_plot(Shift):
 	plt.xticks(ind, x)
 	plt.yticks(np.arange(0, 1, 0.1))
 	# plt.legend((p1[0], p2[0]), ('Men', 'Women'))
-	# plt.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in gca().get_yticks()]) 
+	plt.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in plt.gca().get_yticks()]) 
 
 	plt.savefig('img/plot.png')
 
