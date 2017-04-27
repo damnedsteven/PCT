@@ -109,10 +109,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				<th colspan="4">备料(MR) TAT Performance</th>
 			</tr>
 			<tr bgcolor="#C6EFCE">
-				<th width="30%">Platform</th>
-				<th width="20%">MR PLO QTY</th>
-				<th width="30%">MR TAT Fail PLO QTY (Over 24H)</th>
-				<th width="20%">Failure Rate</th>
+				<th>Platform</th>
+				<th>MR PLO QTY</th>
+				<th>MR TAT Fail PLO QTY (Over 24H)</th>
+				<th>Failure Rate</th>
 			</tr>
 		"""
 	if (Type == 'P'):
@@ -122,10 +122,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				<th colspan="4">生产(P) TAT Performance</th>
 			</tr>
 			<tr bgcolor="#FFFF99">
-				<th width="30%">Platform</th>
-				<th width="20%">Handover PLO QTY</th>
-				<th width="30%">P TAT Fail PLO QTY (Over 42H)</th>
-				<th width="20%">Failure Rate</th>
+				<th>Platform</th>
+				<th>Handover PLO QTY</th>
+				<th>P TAT Fail PLO QTY (Over 42H)</th>
+				<th>Failure Rate</th>
 			</tr>
 		"""
 	if (Type == 'PGI'):
@@ -135,10 +135,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				<th colspan="4">出货(PGI) TAT Performance</th>
 			</tr>
 			<tr bgcolor="#E6E6FA">
-				<th width="30%">Platform</th>
-				<th width="20%">PGI PLO QTY</th>
-				<th width="30%">PGI TAT Fail PLO QTY (Over 6H)</th>
-				<th width="20%">Failure Rate</th>
+				<th>Platform</th>
+				<th>PGI PLO QTY</th>
+				<th>PGI TAT Fail PLO QTY (Over 6H)</th>
+				<th>Failure Rate</th>
 			</tr>
 		"""
 	if (Type == 'PC'):
@@ -148,10 +148,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				<th colspan="4">Overall PCT Performance</th>
 			</tr>
 			<tr bgcolor="#e842f4">
-				<th width="30%">Product Category</th>
-				<th width="20%">PGI DG QTY</th>
-				<th width="30%">PCT Fail DG QTY</th>
-				<th width="20%">Failure Rate</th>
+				<th>Product Category</th>
+				<th>PGI DG QTY</th>
+				<th>PCT Fail DG QTY</th>
+				<th>Failure Rate</th>
 			</tr>
 		"""
 	# for k, v in Count.items():

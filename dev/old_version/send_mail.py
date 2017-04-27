@@ -5,10 +5,8 @@ from email import encoders
 from email.header import Header
 from email.mime.text import MIMEText
 from email.utils import parseaddr, formataddr
-from email.mime.multipart import MIMEMultipart, MIMEBase
 import smtplib
 from write_message import write_message
-from make_plot import make_plot
 from datetime import datetime, timedelta
 
 
@@ -49,44 +47,10 @@ Table_P = write_message(Type = 'P', Target = Target_P, From = 'WHUpdateTime', To
 Table_PGI = write_message(Type = 'PGI', Target = Target_PGI, From = 'HandoverTime', To = 'PGITime', WorkingDay = WD, WorkingHour = WH, URL = URL_PGI, Shift = from_date)
 Table_PC = write_message(Type = 'PC', Target = Target_PC, From = 'BirthDate', To = 'PGITime', WorkingDay = WD, WorkingHour = WH, URL = URL_PC, Shift = from_date)
 
-make_plot(Shift = from_date)
-
-Plot = """
-	<table border="1" width="888">
-		<tr>
-			<td>
-				<img src="cid:0" alt="PCTFailureReport" align="center" border=0 />
-			</td>
-		</tr>
-		</tr>
-	</table>
-"""
-
-msg = MIMEMultipart()
-
+msg = MIMEText(Table_MR + Table_P + Table_PGI + Table_PC, 'html', 'utf-8')
 msg['From'] = _format_addr('PCT Monitor <%s>' % from_addr)
 msg['To'] = _format_addr('管理员 <%s>' % to_addr)
 msg['Subject'] = Header('PCT Fail Report By Shift (%s - %s)' % (from_date, to_date), 'utf-8').encode()
-
-# msg = MIMEText(Plot + Table_MR + Table_P + Table_PGI + Table_PC, 'html', 'utf-8')
-
-# 邮件正文是MIMEText:
-msg.attach(MIMEText(Plot + Table_MR + Table_P + Table_PGI + Table_PC, 'html', 'utf-8'))
-
-# 添加附件就是加上一个MIMEBase，从本地读取一个图片:
-with open('img/plot.png', 'rb') as f:
-    # 设置附件的MIME和文件名，这里是png类型:
-    mime = MIMEBase('image', 'png', filename='plot.png')
-    # 加上必要的头信息:
-    mime.add_header('Content-Disposition', 'attachment', filename='plot.png')
-    mime.add_header('Content-ID', '<0>')
-    mime.add_header('X-Attachment-Id', '0')
-    # 把附件的内容读进来:
-    mime.set_payload(f.read())
-    # 用Base64编码:
-    encoders.encode_base64(mime)
-    # 添加到MIMEMultipart:
-    msg.attach(mime)
 
 server = smtplib.SMTP(smtp_server, 25)
 server.set_debuglevel(1)

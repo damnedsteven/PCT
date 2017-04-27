@@ -3,7 +3,7 @@ import pymssql
 from get_paying_hours import paying_hours
 from collections import defaultdict
 
-def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
+def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL):
 	# Get PCT data in 12 hours from 112 DB
 	conn = pymssql.connect("16.187.224.112", "sa", "support", "FE2CheckPoint")
 	cursor = conn.cursor(as_dict=True)
@@ -89,7 +89,6 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 			Count[Item]['Fail'] += 1
 			FailedPLO[Item].append(k)
 			Sum_Fail += 1
-	Failure_Rate = Sum_Fail/Sum
 	
 	FailedPLOs = defaultdict(lambda: 'N/A')
 	# Do sorting and stringlize
@@ -109,10 +108,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				<th colspan="4">备料(MR) TAT Performance</th>
 			</tr>
 			<tr bgcolor="#C6EFCE">
-				<th width="30%">Platform</th>
-				<th width="20%">MR PLO QTY</th>
-				<th width="30%">MR TAT Fail PLO QTY (Over 24H)</th>
-				<th width="20%">Failure Rate</th>
+				<th>Platform</th>
+				<th>MR PLO QTY</th>
+				<th>MR TAT Fail PLO QTY (Over 24H)</th>
+				<th>Failure Rate</th>
 			</tr>
 		"""
 	if (Type == 'P'):
@@ -122,10 +121,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				<th colspan="4">生产(P) TAT Performance</th>
 			</tr>
 			<tr bgcolor="#FFFF99">
-				<th width="30%">Platform</th>
-				<th width="20%">Handover PLO QTY</th>
-				<th width="30%">P TAT Fail PLO QTY (Over 42H)</th>
-				<th width="20%">Failure Rate</th>
+				<th>Platform</th>
+				<th>Handover PLO QTY</th>
+				<th>P TAT Fail PLO QTY (Over 42H)</th>
+				<th>Failure Rate</th>
 			</tr>
 		"""
 	if (Type == 'PGI'):
@@ -135,10 +134,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				<th colspan="4">出货(PGI) TAT Performance</th>
 			</tr>
 			<tr bgcolor="#E6E6FA">
-				<th width="30%">Platform</th>
-				<th width="20%">PGI PLO QTY</th>
-				<th width="30%">PGI TAT Fail PLO QTY (Over 6H)</th>
-				<th width="20%">Failure Rate</th>
+				<th>Platform</th>
+				<th>PGI PLO QTY</th>
+				<th>PGI TAT Fail PLO QTY (Over 6H)</th>
+				<th>Failure Rate</th>
 			</tr>
 		"""
 	if (Type == 'PC'):
@@ -148,10 +147,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				<th colspan="4">Overall PCT Performance</th>
 			</tr>
 			<tr bgcolor="#e842f4">
-				<th width="30%">Product Category</th>
-				<th width="20%">PGI DG QTY</th>
-				<th width="30%">PCT Fail DG QTY</th>
-				<th width="20%">Failure Rate</th>
+				<th>Product Category</th>
+				<th>PGI DG QTY</th>
+				<th>PCT Fail DG QTY</th>
+				<th>Failure Rate</th>
 			</tr>
 		"""
 	# for k, v in Count.items():
@@ -174,44 +173,6 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 			<th>{Failure_Rate}</th>
 		</tr>
 	</table>
-	""".format(Sum = Sum, Sum_Fail = Sum_Fail, Failure_Rate = "{:.0%}".format(Failure_Rate))
+	""".format(Sum = Sum, Sum_Fail = Sum_Fail, Failure_Rate = "{:.0%}".format(Sum_Fail/Sum))
 
-	if (Type == 'PC'):
-		Type = 'CTO'
-		Sum = Count[Type]['Total']
-		Sum_Fail = Count[Type]['Fail']
-		Failure_Rate = Sum_Fail/Sum
-	# Save failure rate data to 112 DB
-	conn = pymssql.connect("16.187.224.112", "sa", "support", "FE2CheckPoint")
-	cursor = conn.cursor(as_dict=True)
-	cursor.execute("""
-		IF OBJECT_ID('dbo.PCTFailRate', 'U') IS NULL
-			CREATE TABLE PCTFailRate
-			(
-			Name NVARCHAR(20) NULL,
-			Value NVARCHAR(20) NULL,
-			Shift NVARCHAR(20) NULL
-			)
-	""")
-	cursor.execute(
-		"IF NOT EXISTS (SELECT * FROM PCTFailRate WHERE Shift = '{Shift}' AND Name ='{Type}') INSERT INTO PCTFailRate VALUES (%s, %d, %s)".format(Shift = Shift, Type = Type),
-		(Type, Sum, Shift)
-	)
-	cursor.execute(
-		"IF NOT EXISTS (SELECT * FROM PCTFailRate WHERE Shift = '{Shift}' AND Name ='{Type}_Fail') INSERT INTO PCTFailRate VALUES (%s, %d, %s)".format(Shift = Shift, Type = Type),
-		 (Type + '_Fail', Sum_Fail, Shift)
-	)
-	cursor.execute(
-		"IF NOT EXISTS (SELECT * FROM PCTFailRate WHERE Shift = '{Shift}' AND Name ='{Type}_FailRate') INSERT INTO PCTFailRate VALUES (%s, %d, %s)".format(Shift = Shift, Type = Type),
-		 (Type + '_FailRate', Failure_Rate, Shift)
-	)
-	# cursor.executemany(
-		# " INSERT INTO PCTFailRate VALUES (%s, %d, %s)".format(Shift = Shift, Type = Type),
-		# [(Type, Sum, Shift),
-		 # (Type + '_Fail', Sum_Fail, Shift)]
-	# )
-	
-	conn.commit()
-	conn.close()
-	
 	return html
