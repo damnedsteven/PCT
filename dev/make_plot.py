@@ -46,14 +46,14 @@ def make_plot(Shift):
 
 	ind = np.arange(N)    # the x locations for the groups    "{:.0%}".format()
 		
-	width = 0.1       # the width of the bars: can also be len(x) sequence
+	width = 0.02       # the width of the bars: can also be len(x) sequence
 
 	p1 = plt.plot(ind, y['MR_FailRate'])
 	p2 = plt.plot(ind, y['P_FailRate'])
 	p3 = plt.plot(ind, y['PGI_FailRate'])
-	p4 = plt.bar(ind, y['CTO_FailRate'], width)
+	p4 = plt.bar(ind, y['CTO_FailRate'], width, color='#d6cf27')
 	
-	p4[0].set_color('y')
+	# p4[0].set_color('y')
 
 	plt.title('PCT/TAT Failure Rate')
 	# plt.legend(['MR TAT', 'P TAT', 'PGI TAT', 'CTO PCT'], loc='upper left')
