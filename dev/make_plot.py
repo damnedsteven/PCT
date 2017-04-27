@@ -1,10 +1,15 @@
 # a stacked bar plot
 # -*- coding: utf-8 -*-  
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pymssql
 import collections
 from collections import defaultdict
+
 
 def make_plot(Shift):
 	# Get PCT data in 12 hours from 112 DB
