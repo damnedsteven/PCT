@@ -1,8 +1,10 @@
 # a stacked bar plot
 # -*- coding: utf-8 -*-  
+import os
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
+my_path = os.path.dirname(os.path.abspath(__file__))
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -46,29 +48,30 @@ def make_plot(Shift):
 
 	ind = np.arange(N)    # the x locations for the groups    "{:.0%}".format()
 		
-	width = 0.02       # the width of the bars: can also be len(x) sequence
-
+	width = 0.05       # the width of the bars: can also be len(x) sequence
+	plt.figure(figsize=(8.5,5))
+	
 	p1 = plt.plot(ind, y['MR_FailRate'])
 	p2 = plt.plot(ind, y['P_FailRate'])
 	p3 = plt.plot(ind, y['PGI_FailRate'])
 	p4 = plt.bar(ind, y['CTO_FailRate'], width, color='#d6cf27')
 	
 	# p4[0].set_color('y')
-
+	
 	plt.title('PCT/TAT Failure Rate')
 	# plt.legend(['MR TAT', 'P TAT', 'PGI TAT', 'CTO PCT'], loc='upper left')
-	plt.legend((p1[0], p2[0], p3[0], p4[0]), ('MR TAT', 'P TAT', 'PGI TAT', 'CTO PCT'), loc='upper right')
+	plt.legend((p1[0], p2[0], p3[0], p4[0]), ('MR TAT', 'P TAT', 'PGI TAT', 'CTO PCT'), loc='upper left')
 
 
 	# p1 = plt.bar(ind, menMeans, width, color='#d62728')
 	# p2 = plt.bar(ind, womenMeans, width, bottom=menMeans)
 
 	plt.xticks(ind, x)
-	plt.yticks(np.arange(0, 1, 0.1))
+	plt.yticks(np.arange(0, 1.1, 0.1))
 	# plt.legend((p1[0], p2[0]), ('Men', 'Women'))
 	plt.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in plt.gca().get_yticks()]) 
 
-	plt.savefig('img/plot.png')
+	plt.savefig(my_path + '/img/plot.png')
 
 # if __name__ == "__main__":
 	# make_plot(Shift='17/04/26-14')

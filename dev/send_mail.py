@@ -11,6 +11,8 @@ from write_message import write_message
 from make_plot import make_plot
 from datetime import datetime, timedelta
 
+import os
+my_path = os.path.dirname(os.path.abspath(__file__))
 
 def _format_addr(s):
     name, addr = parseaddr(s)
@@ -61,20 +63,12 @@ Plot = """
 		</tr>
 	</table>
 """
+# msg = MIMEText(Table_MR + Table_P + Table_PGI + Table_PC, 'html', 'utf-8')
 
 msg = MIMEMultipart()
 
-msg['From'] = _format_addr('PCT Monitor <%s>' % from_addr)
-msg['To'] = _format_addr('管理员 <%s>' % to_addr)
-msg['Subject'] = Header('PCT Fail Report By Shift (%s - %s)' % (from_date, to_date), 'utf-8').encode()
-
-# msg = MIMEText(Plot + Table_MR + Table_P + Table_PGI + Table_PC, 'html', 'utf-8')
-
-# 邮件正文是MIMEText:
-msg.attach(MIMEText(Plot + Table_MR + Table_P + Table_PGI + Table_PC, 'html', 'utf-8'))
-
 # 添加附件就是加上一个MIMEBase，从本地读取一个图片:
-with open('img/plot.png', 'rb') as f:
+with open(my_path + '/img/plot.png', 'rb') as f:
     # 设置附件的MIME和文件名，这里是png类型:
     mime = MIMEBase('image', 'png', filename='plot.png')
     # 加上必要的头信息:
@@ -87,6 +81,14 @@ with open('img/plot.png', 'rb') as f:
     encoders.encode_base64(mime)
     # 添加到MIMEMultipart:
     msg.attach(mime)
+	
+# 邮件正文是MIMEText:
+msg.attach(MIMEText(Plot + Table_MR + Table_P + Table_PGI + Table_PC, 'html', 'utf-8'))
+
+
+msg['From'] = _format_addr('PCT Monitor <%s>' % from_addr)
+msg['To'] = _format_addr('管理员 <%s>' % to_addr)
+msg['Subject'] = Header('PCT Fail Report By Shift (%s - %s)' % (from_date, to_date), 'utf-8').encode()
 
 server = smtplib.SMTP(smtp_server, 25)
 server.set_debuglevel(1)
