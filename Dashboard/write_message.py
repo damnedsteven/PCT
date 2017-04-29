@@ -105,10 +105,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 	if (Type == 'MR'):
 		html = """
 		<table border="1" width="888">
-			<tr bgcolor="#C6EFCE">
+			<tr bgcolor="#1F77B4">
 				<th colspan="4">备料(MR) TAT Performance</th>
 			</tr>
-			<tr bgcolor="#C6EFCE">
+			<tr bgcolor="#1F77B4">
 				<th width="30%">Platform</th>
 				<th width="20%">MR PLO QTY</th>
 				<th width="30%">MR TAT Fail PLO QTY (Over 24H)</th>
@@ -118,10 +118,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 	if (Type == 'P'):
 		html = """
 		<table border="1" width="888">
-			<tr bgcolor="#FFFF99">
+			<tr bgcolor="#FF7F0E">
 				<th colspan="4">生产(P) TAT Performance</th>
 			</tr>
-			<tr bgcolor="#FFFF99">
+			<tr bgcolor="#FF7F0E">
 				<th width="30%">Platform</th>
 				<th width="20%">Handover PLO QTY</th>
 				<th width="30%">P TAT Fail PLO QTY (Over 42H)</th>
@@ -131,10 +131,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 	if (Type == 'PGI'):
 		html = """
 		<table border="1" width="888">
-			<tr bgcolor="#E6E6FA">
+			<tr bgcolor="#2CA02C">
 				<th colspan="4">出货(PGI) TAT Performance</th>
 			</tr>
-			<tr bgcolor="#E6E6FA">
+			<tr bgcolor="#2CA02C">
 				<th width="30%">Platform</th>
 				<th width="20%">PGI PLO QTY</th>
 				<th width="30%">PGI TAT Fail PLO QTY (Over 6H)</th>
@@ -144,10 +144,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 	if (Type == 'PC'):
 		html = """
 		<table border="1" width="888">
-			<tr bgcolor="#e842f4">
+			<tr bgcolor="#D6CF27">
 				<th colspan="4">Overall PCT Performance</th>
 			</tr>
-			<tr bgcolor="#e842f4">
+			<tr bgcolor="#D6CF27">
 				<th width="30%">Product Category</th>
 				<th width="20%">PGI DG QTY</th>
 				<th width="30%">PCT Fail DG QTY</th>
