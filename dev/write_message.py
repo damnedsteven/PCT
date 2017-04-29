@@ -156,7 +156,10 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 		"""
 	# for k, v in Count.items():
 	for v in Sorted_PF:
-		html += '<tr>'
+		if Type == 'PC' and v == 'CTO':
+			html += '<tr bgcolor=\'#D6CF27\'>'
+		else:
+			html += '<tr>'
 		html += '<td>' + v + '</td>'
 		html += '<td>' + str(Count[v]['Total']) + '</td>'
 		if (Count[v]['Fail'] > 0):	
@@ -165,9 +168,17 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 			html += '<td>' + str(Count[v]['Fail']) + '</td>'
 		html += '<td>' + "{:.0%}".format(Count[v]['Failure_Rate']) + '</td>'
 		html += '</tr>'
-
+		
+	if (Type == 'MR'):
+		html += '<tr bgcolor=\'#1F77B4\'>'
+	elif (Type == 'P'):
+		html += '<tr bgcolor=\'#FF7F0E\'>'
+	elif (Type == 'PGI'):
+		html += '<tr bgcolor=\'#2CA02C\'>'
+	else:
+		html += "<tr>"
+		
 	html += """
-		<tr>
 			<th>Total</th>
 			<th>{Sum}</th>
 			<th>{Sum_Fail}</th>

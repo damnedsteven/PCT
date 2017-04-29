@@ -59,6 +59,7 @@ def make_plot(Shift):
 	# p4[0].set_color('y')
 	
 	plt.title('PCT/TAT Failure Rate')
+	plt.grid(True)
 	# plt.legend(['MR TAT', 'P TAT', 'PGI TAT', 'CTO PCT'], loc='upper left')
 	plt.legend((p1[0], p2[0], p3[0], p4[0]), ('MR TAT', 'P TAT', 'PGI TAT', 'CTO PCT'), loc='upper left')
 
