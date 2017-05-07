@@ -4,6 +4,7 @@ from get_paying_hours import paying_hours
 from collections import defaultdict
 
 def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
+	html = ""
 	Sum = 0
 	Sum_Fail = 0
 	Failure_Rate = 0
@@ -105,7 +106,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 		
 		# Generate table
 		if (Type == 'MR'):
-			html = """
+			html += """
 			<table border="1" width="888">
 				<tr bgcolor="#1F77B4">
 					<th colspan="4">备料(MR) TAT Performance</th>
@@ -118,7 +119,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				</tr>
 			"""
 		if (Type == 'P'):
-			html = """
+			html += """
 			<table border="1" width="888">
 				<tr bgcolor="#FF7F0E">
 					<th colspan="4">生产(P) TAT Performance</th>
@@ -131,7 +132,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				</tr>
 			"""
 		if (Type == 'PGI'):
-			html = """
+			html += """
 			<table border="1" width="888">
 				<tr bgcolor="#2CA02C">
 					<th colspan="4">出货(PGI) TAT Performance</th>
@@ -144,7 +145,7 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 				</tr>
 			"""
 		if (Type == 'PC'):
-			html = """
+			html += """
 			<table border="1" width="888">
 				<tr bgcolor="#D6CF27">
 					<th colspan="4">Overall PCT Performance</th>

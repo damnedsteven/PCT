@@ -32,9 +32,9 @@ def make_plot(Shift):
 	for row in cursor:
 		if (row['Name'][-8:] == 'FailRate'):
 			if (row['Shift'][-2:] == '08'):
-				FailRate[row['Shift'][3:8] + ' Day'].update({row['Name']:float(row['Value'])})
+				FailRate[row['Shift'][3:8] + ' D'].update({row['Name']:float(row['Value'])})
 			if (row['Shift'][-2:] == '20'):
-				FailRate[row['Shift'][3:8] + ' Night'].update({row['Name']:float(row['Value'])})
+				FailRate[row['Shift'][3:8] + ' N'].update({row['Name']:float(row['Value'])})
 
 	od = collections.OrderedDict(sorted(FailRate.items()))
 
@@ -67,7 +67,7 @@ def make_plot(Shift):
 	# p1 = plt.bar(ind, menMeans, width, color='#d62728')
 	# p2 = plt.bar(ind, womenMeans, width, bottom=menMeans)
 
-	plt.xticks(ind, x)
+	plt.xticks(ind, x, rotation=45)
 	plt.yticks(np.arange(0, 1.1, 0.1))
 	# plt.legend((p1[0], p2[0]), ('Men', 'Women'))
 	plt.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in plt.gca().get_yticks()]) 
