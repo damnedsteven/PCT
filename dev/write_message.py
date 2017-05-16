@@ -8,8 +8,6 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 	Sum = 0
 	Sum_Fail = 0
 	Failure_Rate = 0
-	if (Type == 'PC'):
-		Type = 'CTO'
 	# Get PCT data in 12 hours from 112 DB
 	conn = pymssql.connect("16.187.224.112", "sa", "support", "FE2CheckPoint")
 	cursor = conn.cursor(as_dict=True)
@@ -193,12 +191,15 @@ def write_message(Type, Target, From, To, WorkingDay, WorkingHour, URL, Shift):
 		""".format(Sum = Sum, Sum_Fail = Sum_Fail, Failure_Rate = "{:.0%}".format(Failure_Rate))
 
 		# Record FailRate for plot
-		if (Type == 'CTO'):
+		if (Type == 'PC'):
+			Type = 'CTO'
 			Sum = Count[Type]['Total']
 			Sum_Fail = Count[Type]['Fail']
 			if Sum != 0:
 				Failure_Rate = Sum_Fail/Sum
-		
+	
+	if (Type == 'PC'):
+		Type = 'CTO'
 	# Save failure rate data to 112 DB
 	conn = pymssql.connect("16.187.224.112", "sa", "support", "FE2CheckPoint")
 	cursor = conn.cursor(as_dict=True)

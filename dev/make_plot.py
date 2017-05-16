@@ -48,7 +48,7 @@ def make_plot(Shift):
 
 	ind = np.arange(N)    # the x locations for the groups    "{:.0%}".format()
 		
-	width = 0.05       # the width of the bars: can also be len(x) sequence
+	width = 0.2	# the width of the bars: can also be len(x) sequence
 	plt.figure(figsize=(8.5,5))
 	
 	p1 = plt.plot(ind, y['MR_FailRate'])
